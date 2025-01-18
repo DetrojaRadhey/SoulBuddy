@@ -1,7 +1,7 @@
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { motion } from "framer-motion";
-import { Sun, Moon, Star, Sparkles } from "lucide-react";
+import { Moon, Star, Sparkles } from "lucide-react";
 
 interface HoroscopeCardProps {
   sign: string;
@@ -43,7 +43,7 @@ export function HoroscopeCard({ sign, date, element, lord, symbol }: HoroscopeCa
                 <CardDescription className="text-neutral-400">{date}</CardDescription>
               </div>
             </div>
-            <Badge variant="outline" className={elementColors[element]}>
+            <Badge variant="outline" className={elementColors[element as keyof typeof elementColors]}>
               {element}
             </Badge>
           </div>

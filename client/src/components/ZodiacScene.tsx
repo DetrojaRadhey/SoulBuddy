@@ -1,8 +1,30 @@
-import { useRef, useState, useEffect } from 'react';
+import { useRef, useState } from 'react';
 import { Canvas, useFrame } from '@react-three/fiber';
-import { Stars, OrbitControls, Text, useTexture } from '@react-three/drei';
+import { Stars, OrbitControls, Text } from '@react-three/drei';
 import * as THREE from 'three';
 import { useSpring, animated } from '@react-spring/three';
+
+interface PlanetarySystemProps {
+  isActive: boolean;
+}
+
+interface PlanetProps {
+  name: string;
+  distance: number;
+  size: number;
+  color: string;
+  speed: number;
+  emissive: string;
+  isActive: boolean;
+}
+
+interface RashiSymbolsProps {
+  isActive: boolean;
+}
+
+interface ZodiacSceneProps {
+  activeTab?: 'rashi' | 'planets';
+}
 
 function MandalaRing() {
   const meshRef = useRef<THREE.Mesh>(null);
@@ -33,7 +55,7 @@ function MandalaRing() {
   );
 }
 
-function PlanetarySystem({ isActive }) {
+function PlanetarySystem({ isActive }: PlanetarySystemProps) {
   const planets = [
     { name: 'Sun', distance: 4, size: 0.8, color: '#ffd700', speed: 0.001, emissive: '#ff4400' },
     { name: 'Moon', distance: 6, size: 0.6, color: '#ffffff', speed: 0.002, emissive: '#4169e1' },
@@ -61,7 +83,7 @@ function PlanetarySystem({ isActive }) {
   );
 }
 
-function Planet({ name, distance, size, color, speed, emissive, isActive }) {
+function Planet({ name, distance, size, color, speed, emissive, isActive }: PlanetProps) {
   const meshRef = useRef<THREE.Mesh>(null);
   const [hovered, setHovered] = useState(false);
 
@@ -120,7 +142,7 @@ function Planet({ name, distance, size, color, speed, emissive, isActive }) {
   );
 }
 
-function RashiSymbols({ isActive }) {
+function RashiSymbols({ isActive }: RashiSymbolsProps) {
   const rashis = [
     'Mesha', 'Vrishabha', 'Mithuna', 'Karka',
     'Simha', 'Kanya', 'Tula', 'Vrishchika',
@@ -162,7 +184,7 @@ function RashiSymbols({ isActive }) {
   );
 }
 
-export default function ZodiacScene({ activeTab = 'rashi' }) {
+export default function ZodiacScene({ activeTab = 'rashi' }: ZodiacSceneProps) {
   return (
     <Canvas camera={{ position: [0, 15, 30], fov: 60 }}>
       <color attach="background" args={['#000308']} />

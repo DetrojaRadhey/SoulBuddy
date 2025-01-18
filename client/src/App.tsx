@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Compass, Sun, Moon, Star, Sparkles } from 'lucide-react';
+import { Sun, Moon, Star } from 'lucide-react';
 import ZodiacScene from './components/ZodiacScene';
 import { HoroscopeCard } from './components/HoroscopeCard';
 import { Button } from '@/components/ui/button';
@@ -43,7 +43,7 @@ function Home() {
         className="relative min-h-screen"
       >
         <div className="absolute inset-0 z-10">
-          <ZodiacScene activeTab={activeTab} />
+          <ZodiacScene activeTab={activeTab as "rashi" | "planets" | undefined} />
         </div>
         
         <div className="relative z-20 container mx-auto px-4 py-8">
