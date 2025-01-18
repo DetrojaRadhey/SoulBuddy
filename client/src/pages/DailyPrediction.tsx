@@ -52,7 +52,7 @@ export default function DailyPrediction() {
 
     setIsLoading(true);
     try {
-      const response = await fetch(`${import.meta.env.VITE_HTTP_URL}/chat`, {
+      const response = await fetch(`${import.meta.env.VITE_HTTP_URL}`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -94,13 +94,19 @@ export default function DailyPrediction() {
     ]);
 
     try {
-      const response = await fetch(`${import.meta.env.VITE_API_URL}/chat`, {
+      const response = await fetch(`${import.meta.env.VITE_HTTP_URL}`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ input_value: message }),
+        body: JSON.stringify({
+          input_value: `Follow up question: ${message}\nPlease provide an answer based on the previous prediction.`
+        }),
       });
+
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
 
       const data = await response.json();
       setMessages((prev) => [
@@ -109,6 +115,14 @@ export default function DailyPrediction() {
       ]);
     } catch (error) {
       console.error('Error:', error);
+      setMessages((prev) => [
+        ...prev,
+        {
+          type: 'assistant',
+          content: 'Sorry, there was an error processing your request. Please try again.',
+          timestamp: new Date()
+        },
+      ]);
     } finally {
       setIsLoading(false);
     }
@@ -305,7 +319,7 @@ export default function DailyPrediction() {
                             sendMessage(input);
                           }
                         }}
-                        className="bg-neutral-900/50 border-neutral-800"
+                        className="bg-neutral-900/50 border-neutral-800 text-white placeholder:text-neutral-400"
                       />
                       <Button
                         onClick={() => sendMessage(input)}
