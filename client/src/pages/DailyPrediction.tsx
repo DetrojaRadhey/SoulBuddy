@@ -68,10 +68,12 @@ export default function DailyPrediction() {
       });
 
       const data = await response.json();
+      const formattedMessage = formatAstrologicalResponse(data.message);
+      
       setMessages([
         {
           type: 'assistant',
-          content: data.message,
+          content: formattedMessage,
           timestamp: new Date(),
         },
       ]);
@@ -81,6 +83,31 @@ export default function DailyPrediction() {
     } finally {
       setIsLoading(false);
     }
+  };
+
+  const formatAstrologicalResponse = (text: string) => {
+    // Remove all asterisks from the text first
+    const cleanText = text.replace(/\*/g, '');
+    
+    // Split into sections and filter empty strings
+    const sections = cleanText.split('**').filter(Boolean);
+    
+    // Format each section
+    return sections.map(section => {
+      const [title, ...content] = section.split(':');
+      if (!content.length) return section.trim();
+      
+      const contentText = content.join(':').trim();
+      
+      // Split content by newlines or periods to create bullet points
+      const bulletPoints = contentText
+        .split(/[.\n]/)
+        .filter(item => item.trim().length > 0)
+        .map(item => `• ${item.trim()}`)
+        .join('\n');
+
+      return `${title.trim()}:\n${bulletPoints}`;
+    }).join('\n\n');
   };
 
   const sendMessage = async (message: string) => {
@@ -282,7 +309,7 @@ export default function DailyPrediction() {
                             initial={{ opacity: 0, y: 10 }}
                             animate={{ opacity: 1, y: 0 }}
                             className={cn(
-                              'p-4 rounded-lg text-white', // Changed text color to white
+                              'p-4 rounded-lg text-white whitespace-pre-line',
                               message.type === 'user'
                                 ? 'bg-primary/20 border border-primary/30 ml-8'
                                 : 'bg-neutral-900/50 border border-neutral-800 mr-8'
