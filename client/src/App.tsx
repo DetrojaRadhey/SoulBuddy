@@ -1,12 +1,12 @@
 import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Sun, Moon, Star } from 'lucide-react';
+import { Sun, Moon, Star, MessageCircle } from 'lucide-react';
 import ZodiacScene from './components/ZodiacScene';
 import { HoroscopeCard } from './components/HoroscopeCard';
 import { Button } from '@/components/ui/button';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Card } from '@/components/ui/card';
+import { Card, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { BrowserRouter as Router, Routes, Route, useNavigate } from 'react-router-dom';
 import DailyPrediction from './pages/DailyPrediction';
@@ -73,6 +73,71 @@ function Home() {
             <p className="text-xl text-neutral-400 max-w-2xl mx-auto mt-4">
               Explore the ancient wisdom of Vedic astrology through an interactive cosmic journey
             </p>
+          </motion.div>
+
+          <motion.div
+            initial={{ y: 20, opacity: 0 }}
+            animate={{ y: 0, opacity: 1 }}
+            transition={{ delay: 0.3 }}
+            className="max-w-6xl mx-auto mb-12 grid grid-cols-1 md:grid-cols-2 gap-6"
+          >
+            <Card className="bg-black/30 backdrop-blur-lg border-neutral-800/50 hover:bg-black/40 transition-all group">
+              <CardHeader>
+                <CardTitle className="flex items-center gap-2">
+                  <motion.div
+                    animate={{ rotate: 360 }}
+                    transition={{ duration: 20, repeat: Infinity, ease: "linear" }}
+                  >
+                    <Star className="w-5 h-5 text-yellow-500" />
+                  </motion.div>
+                  Kundali & Horoscope Generation
+                </CardTitle>
+                <CardDescription>
+                  Comprehensive birth chart analysis covering all 12 houses, with insights on career, relationships, and personal growth
+                </CardDescription>
+              </CardHeader>
+            </Card>
+
+            <Card className="bg-black/30 backdrop-blur-lg border-neutral-800/50 hover:bg-black/40 transition-all group">
+              <CardHeader>
+                <CardTitle className="flex items-center gap-2">
+                  <motion.div
+                    animate={{ rotate: -360 }}
+                    transition={{ duration: 20, repeat: Infinity, ease: "linear" }}
+                  >
+                    <Moon className="w-5 h-5 text-blue-400" />
+                  </motion.div>
+                  AI Recommendations
+                </CardTitle>
+                <CardDescription>
+                  Personalized gemstone suggestions and ritual recommendations with detailed benefits and importance
+                </CardDescription>
+              </CardHeader>
+            </Card>
+
+            <Card className="bg-black/30 backdrop-blur-lg border-neutral-800/50 hover:bg-black/40 transition-all group">
+              <CardHeader>
+                <CardTitle className="flex items-center gap-2">
+                  <Sun className="w-5 h-5 text-orange-500" />
+                  Spiritual Content Delivery
+                </CardTitle>
+                <CardDescription>
+                  Customized meditation and workout suggestions aligned with your horoscope, plus personalized sleep content
+                </CardDescription>
+              </CardHeader>
+            </Card>
+
+            <Card className="bg-black/30 backdrop-blur-lg border-neutral-800/50 hover:bg-black/40 transition-all group">
+              <CardHeader>
+                <CardTitle className="flex items-center gap-2">
+                  <MessageCircle className="w-5 h-5 text-green-500" />
+                  Spiritual Chatbot
+                </CardTitle>
+                <CardDescription>
+                  Interactive chatbot providing spiritual advice and detailed explanations of predictions
+                </CardDescription>
+              </CardHeader>
+            </Card>
           </motion.div>
 
           <div className="max-w-6xl mx-auto backdrop-blur-lg bg-black/30 rounded-xl p-6 border border-neutral-800/50">
