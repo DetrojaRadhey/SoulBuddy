@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { Star, Loader, Send, ArrowLeft } from 'lucide-react';
@@ -35,14 +35,55 @@ export default function DailyPrediction() {
   const [messages, setMessages] = useState<Message[]>([]);
   const [input, setInput] = useState('');
   const [showForm, setShowForm] = useState(true);
-  const [userDetails, setUserDetails] = useState<UserDetails>({
-    name: '',
-    birthDate: undefined,
-    birthTime: '',
-    gender: '',
-    state: '',
-    city: '',
+  const [userDetails, setUserDetails] = useState<UserDetails>(() => {
+    // Initialize from localStorage if available
+    const savedDetails = localStorage.getItem('userAstroDetails');
+    if (savedDetails) {
+      const parsed = JSON.parse(savedDetails);
+      // Convert stored date string back to Date object
+      return {
+        ...parsed,
+        birthDate: parsed.birthDate ? new Date(parsed.birthDate) : undefined
+      };
+    }
+    return {
+      name: '',
+      birthDate: undefined,
+      birthTime: '',
+      gender: '',
+      state: '',
+      city: '',
+    };
   });
+
+  // Effect to check if we should show form based on stored data
+  useEffect(() => {
+    const hasStoredData = localStorage.getItem('userAstroDetails');
+    if (hasStoredData) {
+      setShowForm(false);
+    }
+  }, []);
+
+  // Save to localStorage whenever userDetails changes
+  useEffect(() => {
+    if (!showForm && userDetails.name) {
+      localStorage.setItem('userAstroDetails', JSON.stringify(userDetails));
+    }
+  }, [userDetails, showForm]);
+
+  const handleForgetMe = () => {
+    localStorage.removeItem('userAstroDetails');
+    setUserDetails({
+      name: '',
+      birthDate: undefined,
+      birthTime: '',
+      gender: '',
+      state: '',
+      city: '',
+    });
+    setShowForm(true);
+    setMessages([]);
+  };
 
   const handleSubmitForm = async () => {
     if (!userDetails.name || !userDetails.birthDate || !userDetails.birthTime || 
@@ -194,6 +235,15 @@ Please provide an answer based on the previous prediction and user's details.`
                       Back
                     </Button>
                   </div>
+                  {!showForm && (
+                    <Button
+                      onClick={handleForgetMe}
+                      variant="ghost"
+                      className="text-red-400 hover:text-red-300 hover:bg-red-500/20"
+                    >
+                      Forget Me
+                    </Button>
+                  )}
                   <Star className="w-5 h-5 text-primary" />
                 </div>
                 <CardTitle className="text-2xl font-bold text-center text-white">Daily Prediction</CardTitle>
@@ -309,6 +359,16 @@ Please provide an answer based on the previous prediction and user's details.`
                   </motion.div>
                 ) : (
                   <>
+                    <div className="mb-4 p-4 rounded-lg bg-primary/10 border border-primary/20">
+                      <h3 className="font-medium text-primary mb-2">Your Details</h3>
+                      <div className="text-sm text-neutral-300 space-y-1">
+                        <p>Name: {userDetails.name}</p>
+                        <p>Birth Date: {userDetails.birthDate ? format(userDetails.birthDate, 'PPP') : ''}</p>
+                        <p>Birth Time: {userDetails.birthTime}</p>
+                        <p>Gender: {userDetails.gender}</p>
+                        <p>Location: {userDetails.city}, {userDetails.state}</p>
+                      </div>
+                    </div>
                     <ScrollArea className="h-[400px] pr-4">
                       <div className="space-y-4">
                         {messages.map((message, index) => (
