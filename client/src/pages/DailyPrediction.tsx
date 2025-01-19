@@ -87,13 +87,13 @@ export default function DailyPrediction() {
 
   const formatAstrologicalResponse = (text: string) => {
     // Remove all asterisks from the text first
-    const cleanText = text.replace(/\*/g, '');
+    const cleanText = text?.replace(/\*/g, '');
     
     // Split into sections and filter empty strings
-    const sections = cleanText.split('**').filter(Boolean);
+    const sections = cleanText?.split('**').filter(Boolean);
     
     // Format each section
-    return sections.map(section => {
+    return sections?.map(section => {
       const [title, ...content] = section.split(':');
       if (!content.length) return section.trim();
       
@@ -127,7 +127,15 @@ export default function DailyPrediction() {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          input_value: `Follow up question: ${message}\nPlease provide an answer based on the previous prediction.`
+          input_value: `Follow up question: ${message}
+User Details:
+Name: ${userDetails.name}
+Birth Date: ${format(userDetails.birthDate!, 'PPP')}
+Birth Time: ${userDetails.birthTime}
+Gender: ${userDetails.gender}
+Location: ${userDetails.city}, ${userDetails.state}
+
+Please provide an answer based on the previous prediction and user's details.`
         }),
       });
 
